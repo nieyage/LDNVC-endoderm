@@ -240,3 +240,26 @@ library(psych)
 pdf("DEGcount-cor.pdf")
 pairs.panels(DEGcount,cex.cor=1.5)
 dev.off()
+
+
+library(pheatmap)
+pcacount<-read.table("D:/project/LDN-VC-endoderm/figure and MS/RNAseq-PCAcount.txt")
+colnames(pcacount)<-c("Day0.1","Day0.2","Day0.3","Day1.1","Day1.2","Day1.3","LDN.Day3.1","LDN.Day3.2","LDN.Day3.3",
+                      "Y_hESC2","Y_hESC3","Y_DE1","Y_DE2","Y_ME1","Y_ME2",
+                      "H_ME1","H_ME2","H_hESC1","H_hESC2","H_DE1","H_DE2")
+
+liver<-c("HNF4A","HHEX","ALB","HNF6","HNF1A","UGT1A1","ASGR","AAT","CYP3A7","CYP3A4","CYP1A1")
+lung<-c("P63","CK5","NGFR","ACTTUB","SFTPC","SFTPB","ABCA3","LAMP3","LPCAT1","SCGB1A1","PDPN","AGER","CAV1")
+pancreas<-c("INSULIN","NKX2-2","NKX6.1","NGN3","PDX1","MAFA","NEUROD1","CHGA","SST","ABCC8","G6PC2","PCSK1","PCSK2")
+data<-pcacount[which(rownames(pcacount)%in% liver),]
+str(data)
+
+data<-data[,c(1:3,10:11,18:19,4:9,12:13,20,21,14:17)]
+data=t(scale(t(data),scale = T,center = T))
+library(pheatmap)
+bk <- c(seq(-1,-0.1,by=0.01),seq(0,1,by=0.01))
+pheatmap(data,cluster_cols = T,cluster_rows =T ,
+         clustering_method = "ward.D2",
+         color = colorRampPalette(c("navy", "white", "firebrick3"))(100),
+         show_rownames=T,show_colnames=T)
+
